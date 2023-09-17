@@ -1,0 +1,45 @@
+```javascript
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
+
+import store from '../src/store';
+import apolloClient from '../src/apolloClient';
+import App from '../src/App';
+
+describe('Integration tests for Elysium OS', () => {
+  beforeEach(() => {
+    render(
+      <ApolloProvider client={apolloClient}>
+        <Provider store={store}>
+          <Router>
+            <App />
+          </Router>
+        </Provider>
+      </ApolloProvider>
+    );
+  });
+
+  test('renders Elysium OS', () => {
+    const linkElement = screen.getByText(/Elysium OS/i);
+    expect(linkElement).toBeInTheDocument();
+  });
+
+  test('navigates to user profile', async () => {
+    userEvent.click(screen.getByText(/Profile/i));
+    expect(await screen.findByText(/User Profile/i)).toBeInTheDocument();
+  });
+
+  test('navigates to AI assistant', async () => {
+    userEvent.click(screen.getByText(/AI Assistant/i));
+    expect(await screen.findByText(/AI Assistant/i)).toBeInTheDocument();
+  });
+
+  test('navigates to customization', async () => {
+    userEvent.click(screen.getByText(/Customization/i));
+    expect(await screen.findByText(/Customization/i)).toBeInTheDocument();
+  });
+});
+```
